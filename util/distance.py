@@ -11,6 +11,24 @@ import math
 from .Dcalculus import Dcalculus
 #from exceptions import IllegalMassSizeError
 def JousselmeDistance(mass1,mass2, D = "None"):
+	"""
+	Calclate Jousselme distance between two mass functions mass1 and mass2
+	This function is able to calcuate the Jaccard matrix if not given. 
+	Attention: calculation of Jaccard matrix is a heavy task.
+	
+	Parameters
+	----------
+	mass1: a vector representing first mass function
+	
+	mass2: a vector representing other mass function
+	
+	D: a square matrix representing Jaccard matrix
+	
+	Return
+	------
+	out: float representing the distance
+	"""
+	
     m1 = np.array(mass1).reshape((1,mass1.size))
     m2 = np.array(mass2)
     if m1.size != m2.size:

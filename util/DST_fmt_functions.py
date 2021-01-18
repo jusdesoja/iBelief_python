@@ -1,8 +1,8 @@
 ###------DST fmt functions--------------#####
 
-### from R codes by Kuang Zhou refering to matlab codes by Philippe Smets. FMT = Fast Mobius Transform
+### from R codes by Kuang Zhou referring to matlab codes by Philippe Smets. FMT = Fast Mobius Transform
 ### depend: numpy ####
-#Author: Yiru Zhang <yiru.zhang@irisa.fr>
+#Author: Yiru Zhang <zyrbruce@gmail.com>
 
 
 #TODO: exit function should be replaced by exceptions.
@@ -13,8 +13,16 @@ import math
 from sys import exit
 
 def mtobetp(InputVec):
-    """Computing BetP on the signal points from the m vector (InputVec) out = BetP
-    vector beware: not optimize, so can be slow for >10 atoms
+    """Computing pignistic propability BetP on the signal points from the m vector (InputVec) out = BetP
+    vector beware: not optimize, so can be slow for more than 10 atoms
+	
+	Parameter
+	---------
+	InputVec: a vector representing a mass function
+	
+	Return
+	---------
+	out: a vector representing the correspondant pignistic propability 
     """
     # the length of the power set, f
     mf = InputVec.size
@@ -41,12 +49,14 @@ def mtobetp(InputVec):
 
 def mtoq(InputVec):
     """
-    Computing FMT from m to q
-    Argument:
-    InputVec : vector m
+    Computing Fast Mobius Transfer (FMT) from mass function m to commonality function q
+    
+	Parameters
+	----------
+    InputVec : vector m representing a mass function 
 
     Return:
-    out: vector q
+    out: a vector representing a commonality function
     """
     InputVec = InputVec.copy()
     mf = InputVec.size
@@ -73,8 +83,14 @@ def mtoq(InputVec):
 def mtob(InputVec):
     """
     Comput InputVec from m to b function.  belief function + m(emptset)
-    InputVec = m
-    vector out = b vector
+    
+	Parameter
+	---------
+	InputVec: vector m representing a mass function
+    
+	Return
+	---------
+	out: a vector representing a belief function
     """
     InputVec = InputVec.copy()
     mf = InputVec.size
@@ -107,6 +123,14 @@ def mtob(InputVec):
 def mtonm(InputVec):
     """
     Transform bbm into normalized bbm
+	
+	Parameter
+	---------
+	InputVec: vector m representing a mass function
+    
+	Return
+	---------
+	out: vector representing a normalized mass function
     """
     if InputVec[0] < 1:
         out = InputVec/(1-InputVec[0])
@@ -119,8 +143,13 @@ def mtobel(InputVec):
 def qtom(InputVec):
     """
     Compute FMT from q to m.
-    input: vector q
-    output: vector m
+    Parameter
+	----------
+	InputVec: commonality function q
+	
+	Return
+	--------
+    output: mass function m
     """
     InputVec = InputVec.copy()
     lm = InputVec.size
@@ -141,6 +170,16 @@ def qtom(InputVec):
 
 
 def btom(InputVec):
+    """
+    Compute FMT from b to m.
+    Parameter
+	---------
+	InputVec: commonality function q
+	
+	Return
+	--------
+    output: mass function m
+    """
     mass_t = InputVec.copy()
     mf = mass_t.size
     natoms = round(math.log2(mf))
@@ -160,6 +199,17 @@ def btom(InputVec):
         raise ValueError("ACCIDENT in btom: length of input vector not OK: should be a power of 2, given %d\n" % mf)
 
 def pltob(InputVec):
+    """
+    Compute from plausibility pl to belief b.
+    
+	Parameter
+	----------
+	InputVec: plausibility function pl
+	
+	Return
+	--------
+    output: belief function m
+    """
     mf = InputVec.size
     natoms = round(math.log2(mf))
     if 2 ** natoms == mf:
@@ -169,18 +219,48 @@ def pltob(InputVec):
     else:
         raise ValueError("ACCIDENT in pltob: length of input vector not OK: should be a power of 2, given %d\n" % mf)
 def mtopl(InputVec):
+    """
+    Compute from mass function m to plausibility pl.
+    
+	Parameter
+	----------
+	InputVec: mass function m
+	
+	Return
+	--------
+    output: plausibility function pl
+    """
     InputVec = mtob(InputVec)
     out = btopl(InputVec)
     return out
 
 def pltom(InputVec):
+    """
+    Compute from  plausibility pl to mass function m.
+    
+	Parameter
+	----------
+	InputVec: plausibility function pl
+	
+	Return
+	--------
+    output: mass function m
+    """
+	
+	
     out = btom(pltob(InputVec))
     return out
 def qtow(InputVec):
     """
-    Compute FMT from q to w, Use algorithm qtom on log q
-    input: vector q
-    output: vector w
+    Compute FMT from commonality q to weight w, Use algorithm qtom on log q
+    
+	Parameter
+	----------
+	input: commonality function q
+	
+	Return
+	---------
+    output: weight function w
     """
     InputVec = InputVec.astype(float)
     lm = InputVec.size
@@ -213,9 +293,18 @@ def qtow(InputVec):
     return out
 
 def btopl(InputVec):
-    #compute pl from b Inputvec
-    #InputVec vector f*1
-    #return pl
+	"""
+    Compute from belief b to plausibility pl
+	
+	Parameter
+	---------
+    InputVec: belief function b
+	
+	Return 
+	------
+    out: plausibility function pl
+	"""
+    
     lm = InputVec.size
     natoms = round(math.log2(lm))
     if 2 ** natoms == lm:
@@ -228,6 +317,17 @@ def btopl(InputVec):
 #functions below are not tested
 ############################################
 def wtoq(InputVec):
+    """
+    Compute FMT from weight w to commonality q
+    
+	Parameter
+	----------
+	input: weight function w
+	
+	Return
+	---------
+    output: commonality function q
+    """
     lm = InputVec.size
     natoms = round(math.log2(lm))
     if 2 ** natoms == lm:
@@ -241,13 +341,30 @@ def wtoq(InputVec):
 
 def mtow(InputVec):
     """Compute FMT from m to w.
-    input: vector m
-    output: vector w
+	
+	Parameter
+	---------
+    InputVec: mass function m
+	
+	Return
+	------
+    output: weight function w
     """
     out = qtow(mtoq(InputVec))
     return out
 
 def wtom(InputVec):
+    """
+    Compute FMT from weight w to mass function m
+    
+	Parameter
+	----------
+	input: weight function w
+	
+	Return
+	---------
+    output: mass function m
+    """
     out = qtom(wtoq(InputVec))
     return out
 

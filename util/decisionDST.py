@@ -12,7 +12,7 @@ def decisionDST(mass, criterion, r=0.5):
     
     Parameters
     -----------
-    mass: 
+    mass: mass function to decide with
     
     criterion: integer
         different decision rules to apply.

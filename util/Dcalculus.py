@@ -5,7 +5,17 @@ import numpy as np
 import math
 
 def Dcalculus(lm):
-    """Compute the table of conflict """
+    """Compute the Jaccard matrix for the disernment framework of the given mass function
+	
+	Parameter
+	---------
+	lm: a vector representing a mass function
+	
+	Return
+	------
+	out: the Jaccard matrix for the given mass function
+	
+	"""
     natoms = round(math.log2(lm))
     ind = [{}]*lm
     if (math.pow(2, natoms) == lm):

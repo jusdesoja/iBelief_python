@@ -40,7 +40,7 @@ def DST(massIn, criterion, TypeSSF=0):
     """
     Combination rules for multiple masses.
 
-    Parameters:
+    Parameters
     ----------
     massIn: ndarray
         Masses to be combined, represented by a 2D matrix
@@ -66,7 +66,7 @@ def DST(massIn, criterion, TypeSSF=0):
         If TypeSSF = 1, it is a SSF with a singleton as a focal element.
         If TypeSSF = 2, it is a SSF with any subset of \Theta as a focal element.
 
-    Return:
+    Return
     ----------
     Mass: ndarray
         a final mass vector combining all masses
@@ -130,6 +130,30 @@ def DST(massIn, criterion, TypeSSF=0):
     return Mass[np.newaxis].transpose()
 
 def LNS(massIn, mygamma,ifnormalize = False, ifdiscount = True, approximate=False, eta = 0):
+	"""
+	LNS rule.  Can also be used for conjunctive rule, cautious rule and DS rule.
+	Only for seperable masses
+	Parameters
+	----------
+    massIn: ndarray
+        Masses to be combined, represented by a 2D matrix
+    mygamma: integer
+		Parameter of the family of conjunctive and disjunctive rules using triangular norms by Denoeux.
+		mygamma = 1, with ifnormalize = FALSE, smets conjunctive rule
+		mygamma = 1, with ifnormalize = TRUE, Dempster rule
+		mygamma = 0, cautious rule
+		mygamma between 0 and 1, the generalized case of the rules using triangular by Denoeux
+		mygamma = 1, ifnormalize = FALSE, ifdiscount = TRUE, LNS rule
+	approximate: bool
+		If TRUE, LNSa rule is conducted, which is the approximation method for LNS rule
+	eta: float
+		A parameter in LNS rule, controling the specificity of the decision
+
+    Return
+    ----------
+    Mass: ndarray
+        a final mass vector combining all masses
+	"""
     nf,n = massIn.shape
     ThetaSize = np.log2(nf)
     w_mat = np.apply_along_axis(mtow,axis = 0,arr = massIn)
@@ -171,6 +195,28 @@ def LNS(massIn, mygamma,ifnormalize = False, ifdiscount = True, approximate=Fals
     return out
 
 def LNS_SSF(massIn, mygamma, ifnormalize = False, ifdiscount =True, approximate=False, eta = 0, singleton = False):
+	"""
+	LNS rule for single support mass functions
+	
+	Parameters
+	----------
+    massIn: ndarray
+        Masses to be combined, represented by a 2D matrix
+    mygamma: integer
+		Parameter of the family of conjunctive and disjunctive rules using triangular norms by Denoeux.
+		mygamma = 1, with ifnormalize = FALSE, smets conjunctive rule
+		mygamma = 1, with ifnormalize = TRUE, Dempster rule
+		mygamma = 0, cautious rule
+		mygamma between 0 and 1, the generalized case of the rules using triangular by Denoeux
+		mygamma = 1, ifnormalize = FALSE, ifdiscount = TRUE, LNS rule
+	approximate: bool
+		If TRUE, LNSa rule is conducted, which is the approximation method for LNS rule
+
+    Return
+    ----------
+    Mass: ndarray
+        a final mass vector combining all masses
+	"""
     m,n = massIn.shape
     if singleton:
         ThetaSize = m
