@@ -170,7 +170,9 @@ class ECM:
     @staticmethod
     # @jit
     def _calculateC(self):
-        """ Calcultate the matrix of cardinal of focal elements"""
+        """ 
+        Calcultate the matrix of cardinal of focal elements 
+        """
 
         self.Cardinal = np.sum(self.S, 1)
         return self.Cardinal
@@ -180,6 +182,7 @@ class ECM:
     def _calculateS(self):
         """
         Calculate the matrix of association s_kj
+        Equation (17) 
         """
         #self.S = np.zeros((self.c, self.c2))
         self.S = (np.arange(self.c2)[:, None] & (
@@ -196,7 +199,8 @@ class ECM:
     # @jit
     def _calculateD(self, Xin):
         """
-        Calculate samples to each barycenter vbar
+        Calculate distances from samples to each barycenter vbar
+        Equation (19) in ref.
         """
         self._calculateVBar(self)
         #for j in range(self.c2):
@@ -218,6 +222,9 @@ class ECM:
     @staticmethod
     # @jit
     def _calculateSam2Vbars(sample, Vbars):
+        """
+        Calculate distance from one sample to each Vbars
+        """
         # distance.euclidean takes time.
         #print(sample, Vbars)
         oneSamToVbars = np.apply_along_axis(
@@ -228,6 +235,9 @@ class ECM:
     @staticmethod
     # @jit
     def _calculateB(self, Xin, Mass):
+        """
+        Calculate matrix B (Equation (36) in ref.)
+        """
         B = np.zeros((self.c, self.dim))
         for l in range(self.c):
             for q in range(self.dim):
@@ -236,6 +246,9 @@ class ECM:
         return B
 
     def _calculateH(self, Mass):
+        """
+        Calculate matrix H (Equation (37) in ref.)
+        """
         H = np.zeros((self.c, self.c))
         for l in range(self.c):
             for k in range(self.c):
@@ -246,6 +259,10 @@ class ECM:
     @staticmethod
     # @jit
     def _calculateM(self, X):
+        """
+        Calculate matrix M 
+        Equation (29) and (30) in ref.
+        """
         self.D = ECM._calculateD(self, X)
         M = np.zeros((self.n_samples, self.c2))
         CMulD = 1.0/(((self.Cardinal ** self.alpha) * self.D) ** (self.beta-1))
@@ -270,6 +287,10 @@ class ECM:
     @staticmethod
     # @jit
     def _calculateV(self, Xin, Mass):
+        """
+        Calculate V
+        Equation (38) ref.
+        """
         H = self._calculateH( Mass)
         B = self._calculateB(self, Xin, Mass)
         self.centers = np.dot(np.linalg.inv(H), B)
@@ -278,6 +299,10 @@ class ECM:
     @staticmethod
     # @jit
     def _calculateVBar(self):
+        """
+        Calculate VBar 
+        Equation (18) in ref.
+        """
         self.VBars = np.zeros((self.c2 - 1, self.dim))
         
             #print('coeff', self.S[j,:].T)
